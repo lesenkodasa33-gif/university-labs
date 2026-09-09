@@ -1,0 +1,23 @@
+# C# / .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.userprefs
+
+# JetBrains Rider
+.idea/
+
+# Visual Studio
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment / secrets
+.env
+appsettings.Development.json
+secrets.json
