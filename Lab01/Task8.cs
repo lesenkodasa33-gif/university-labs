@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-
+// Task 8 у Task8.cs
 namespace oop_course
 {
     public static class Task8
