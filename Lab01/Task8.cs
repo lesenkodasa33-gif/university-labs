@@ -1,37 +1,10 @@
 ﻿using System;
 using System.Globalization;
-// Task 8 у Task8.cs
+
 namespace oop_course
 {
     public static class Task8
     {
-        public static void Run()
-        {
-            
-            double weight = double.Parse(Console.ReadLine()!.Replace(',', '.'), CultureInfo.InvariantCulture);
-            double height = double.Parse(Console.ReadLine()!.Replace(',', '.'), CultureInfo.InvariantCulture);
-            double bmi = CalculateBMI(weight, height);
-            string bmiCategory = GetBMICategory(bmi);
-            Console.WriteLine(bmiCategory);
-
-            double price = double.Parse(Console.ReadLine()!.Replace(',', '.'), CultureInfo.InvariantCulture);
-            int count = int.Parse(Console.ReadLine()!);
-            int discount = int.Parse(Console.ReadLine()!);
-            double cost = CalculateCost(price, count, discount);
-            Console.WriteLine(cost);
-
-            
-            int birthYear = int.Parse(Console.ReadLine()!);
-            string ageCategory = GetAgeCategory(2026 - birthYear);
-            Console.WriteLine(ageCategory);
-
-            
-            int systolic = int.Parse(Console.ReadLine()!);
-            int diastolic = int.Parse(Console.ReadLine()!);
-            string pressureStatus = GetPressureStatus(systolic, diastolic);
-            Console.WriteLine(pressureStatus);
-        }
-
         public static double CalculateBMI(double weight, double height)
         {
             return weight / (height * height);
@@ -45,24 +18,48 @@ namespace oop_course
             return "ожиріння";
         }
 
-        public static double CalculateCost(double price, int count, int discount)
+        public static double CalculateCost(double price, int visits, int discount)
         {
-            return price * count * (1.0 - discount / 100.0);
+            return price * visits * (1.0 - discount / 100.0);
         }
 
         public static string GetAgeCategory(int age)
         {
-            if (age <= 17) return "дитина";
-            if (age <= 59) return "дорослий";
+            if (age < 18) return "дитина";
+            if (age <= 60) return "дорослий";
             return "пенсіонер";
         }
 
         public static string GetPressureStatus(int systolic, int diastolic)
         {
-            if (systolic < 120 && diastolic < 80) return "норма";
-            if (systolic < 130 && diastolic < 80) return "підвищений";
-            if (systolic < 140 || diastolic < 90) return "гіпертонія 1 ступеня";
+            if (systolic < 120 && diastolic < 80) return "нормальний";
+            if (systolic <= 129 && diastolic < 80) return "підвищений";
+            if (systolic <= 139 || diastolic <= 89) return "гіпертонія 1 ступеня";
             return "гіпертонія 2 ступеня";
+        }
+
+        public static void Run()
+        {
+            double weight = double.Parse(Console.ReadLine()!.Replace(',', '.'), CultureInfo.InvariantCulture);
+            double height = double.Parse(Console.ReadLine()!.Replace(',', '.'), CultureInfo.InvariantCulture);
+            double price = double.Parse(Console.ReadLine()!.Replace(',', '.'), CultureInfo.InvariantCulture);
+            int visits = int.Parse(Console.ReadLine()!);
+            int discount = int.Parse(Console.ReadLine()!);
+            int birthYear = int.Parse(Console.ReadLine()!);
+            int systolic = int.Parse(Console.ReadLine()!);
+            int diastolic = int.Parse(Console.ReadLine()!);
+
+            double bmi = CalculateBMI(weight, height);
+            string bmiCat = GetBMICategory(bmi);
+            double totalCost = CalculateCost(price, visits, discount);
+            int age = 2026 - birthYear;
+            string ageCat = GetAgeCategory(age);
+            string pressureStat = GetPressureStatus(systolic, diastolic);
+
+            Console.WriteLine($"IMT: {bmi:F2} -> {bmiCat}");
+            Console.WriteLine($"Сума: {totalCost:F2} грн");
+            Console.WriteLine($"Вік: {age} р., категорія: {ageCat}");
+            Console.WriteLine($"Тиск: {systolic}/{diastolic} — {pressureStat}");
         }
     }
 }
