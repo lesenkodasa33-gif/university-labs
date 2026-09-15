@@ -1,5 +1,5 @@
 ﻿using System;
-
+// Task 1 у Task1.cs
 namespace oop_course
 {
     public static class Task1
