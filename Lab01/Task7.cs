@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-
+// Task 7 у Task7.cs
 namespace oop_course
 {
     public static class Task7
