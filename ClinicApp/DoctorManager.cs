@@ -1,5 +1,5 @@
 ﻿namespace ClinicApp;
-
+// Lab03 Task04
 public class DoctorManager
 {
     private const int MaxDoctors = 50;
