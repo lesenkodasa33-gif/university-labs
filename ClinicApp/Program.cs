@@ -1,5 +1,7 @@
 ﻿using ClinicApp;
 
+// ==================== ПАЦІЄНТИ ====================
+
 Patient patient1 = new Patient(
     "Іван",
     "Петренко",
@@ -33,6 +35,10 @@ Console.WriteLine(patient2);
 Console.WriteLine(patient3);
 Console.WriteLine(patient4);
 Console.WriteLine(patient5);
+
+
+// ==================== ЛІКАРІ ====================
+
 Console.WriteLine();
 Console.WriteLine("=== Лікарі ===");
 
@@ -67,6 +73,10 @@ Doctor doctor3 = new Doctor(
 Console.WriteLine(doctor1);
 Console.WriteLine(doctor2);
 Console.WriteLine(doctor3);
+
+
+// ==================== PATIENT MANAGER ====================
+
 PatientManager patientManager = new PatientManager();
 
 patientManager.Add(patient1);
@@ -74,56 +84,33 @@ patientManager.Add(patient2);
 patientManager.Add(patient3);
 patientManager.Add(patient4);
 patientManager.Add(patient5);
+
+
+// ==================== DOCTOR MANAGER ====================
+
 DoctorManager doctorManager = new DoctorManager();
 
 doctorManager.Add(doctor1);
 doctorManager.Add(doctor2);
 doctorManager.Add(doctor3);
-Console.WriteLine();
-Console.WriteLine("=== Записи ===");
 
-Appointment appointment1 = new Appointment(
-    patient1.Id,
-    doctor1.Id,
-    System.DateTime.Now.AddDays(1),
-    "Плановий огляд"
-);
 
-Appointment appointment2 = new Appointment(
-    patient2.Id,
-    doctor2.Id,
-    System.DateTime.Now.AddDays(2),
-    "Консультація"
-);
+// ==================== APPOINTMENT MANAGER ====================
 
-Appointment appointment3 = new Appointment(
-    patient3.Id,
-    doctor3.Id,
-    System.DateTime.Now.AddDays(3),
-    "Повторний огляд"
-);
+AppointmentManager appointmentManager =
+    new AppointmentManager(patientManager, doctorManager);
 
-Console.WriteLine(appointment1);
-Console.WriteLine(appointment2);
-Console.WriteLine(appointment3);
 
-Console.WriteLine();
-Console.WriteLine("Скасовуємо запис A1:");
-Console.WriteLine(appointment1.Cancel());
-Console.WriteLine(appointment1);
-
-Console.WriteLine();
-Console.WriteLine("Пробуємо завершити вже скасований A1:");
-Console.WriteLine(appointment1.Complete());
-Console.WriteLine(appointment1);
-
-Console.WriteLine();
-Console.WriteLine("Завершуємо запис A2:");
-Console.WriteLine(appointment2.Complete());
-Console.WriteLine(appointment2);
+// ==================== МЕНЮ ====================
 
 PatientMenu(patientManager);
 DoctorMenu(doctorManager);
+AppointmentMenu(appointmentManager);
+
+
+// ==========================================================
+//                       PATIENT MENU
+// ==========================================================
 
 static void PatientMenu(PatientManager manager)
 {
@@ -214,6 +201,12 @@ static void PatientMenu(PatientManager manager)
         }
     }
 }
+
+
+// ==========================================================
+//                       DOCTOR MENU
+// ==========================================================
+
 static void DoctorMenu(DoctorManager manager)
 {
     while (true)
@@ -320,6 +313,133 @@ static void DoctorMenu(DoctorManager manager)
                 else
                 {
                     Console.WriteLine("Лікар не доступний у цю годину.");
+                }
+
+                break;
+
+            case "0":
+                return;
+
+            default:
+                Console.WriteLine("Невірний вибір.");
+                break;
+        }
+    }
+}
+
+
+// ==========================================================
+//                    APPOINTMENT MENU
+// ==========================================================
+
+static void AppointmentMenu(AppointmentManager manager)
+{
+    while (true)
+    {
+        Console.WriteLine();
+        Console.WriteLine("=== Записи ===");
+        Console.WriteLine("1. Показати всі");
+        Console.WriteLine("2. Створити запис");
+        Console.WriteLine("3. Майбутні записи");
+        Console.WriteLine("4. Скасувати");
+        Console.WriteLine("5. Завершити");
+        Console.WriteLine("0. Вийти");
+        Console.Write("Ваш вибір: ");
+
+        string choice = Console.ReadLine()!;
+
+        switch (choice)
+        {
+            case "1":
+                manager.DisplayAll();
+                break;
+
+            case "2":
+                Console.Write("ID пацієнта: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int patientId))
+                {
+                    Console.WriteLine("Некоректний ID пацієнта.");
+                    break;
+                }
+
+                Console.Write("ID лікаря: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int doctorId))
+                {
+                    Console.WriteLine("Некоректний ID лікаря.");
+                    break;
+                }
+
+                Console.Write("Дата (дд.мм.рррр): ");
+                string dateText = Console.ReadLine()!;
+
+                Console.Write("Година (0-23): ");
+
+                if (!int.TryParse(Console.ReadLine(), out int hour) ||
+                    hour < 0 || hour > 23)
+                {
+                    Console.WriteLine("Некоректна година.");
+                    break;
+                }
+
+                if (!DateTime.TryParse(dateText, out DateTime date))
+                {
+                    Console.WriteLine("Некоректна дата.");
+                    break;
+                }
+
+                DateTime appointmentDate = new DateTime(
+                    date.Year,
+                    date.Month,
+                    date.Day,
+                    hour,
+                    0,
+                    0
+                );
+
+                Console.Write("Причина: ");
+                string reason = Console.ReadLine()!;
+
+                manager.Schedule(
+                    patientId,
+                    doctorId,
+                    appointmentDate,
+                    reason
+                );
+
+                break;
+
+            case "3":
+                manager.DisplayUpcoming();
+                break;
+
+            case "4":
+                Console.Write("ID запису: ");
+
+                if (int.TryParse(Console.ReadLine(), out int cancelId) &&
+                    manager.Cancel(cancelId))
+                {
+                    Console.WriteLine("Запис скасовано.");
+                }
+                else
+                {
+                    Console.WriteLine("Не вдалося скасувати запис.");
+                }
+
+                break;
+
+            case "5":
+                Console.Write("ID запису: ");
+
+                if (int.TryParse(Console.ReadLine(), out int completeId) &&
+                    manager.Complete(completeId))
+                {
+                    Console.WriteLine("Запис завершено.");
+                }
+                else
+                {
+                    Console.WriteLine("Не вдалося завершити запис.");
                 }
 
                 break;
