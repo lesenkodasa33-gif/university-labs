@@ -27,7 +27,7 @@ public class Patient
         {
             int age = DateTime.Today.Year - DateOfBirth.Year;
 
-            if (DateOfBirth.Date > DateTime.Today.AddYears(-age))
+            if (DateTime.Today < DateOfBirth.AddYears(age))
             {
                 age--;
             }
@@ -45,32 +45,27 @@ public class Patient
     }
 
     public Patient()
-        : this("Невідомий", "Пацієнт",
-               DateTime.Today.AddYears(-26),
-               "Невідомо", "0000000000")
+        : this("Невідомий", "Пацієнт", new DateTime(2000, 1, 1), "Невідомо", "0000000000")
     {
     }
 
     public Patient(string firstName, string lastName)
-        : this(firstName, lastName,
-               DateTime.Today.AddYears(-26),
-               "Невідомо", "0000000000")
+        : this(firstName, lastName, new DateTime(2000, 1, 1), "Невідомо", "0000000000")
     {
     }
 
     public Patient(
         string firstName,
         string lastName,
-        DateTime dob,
+        DateTime dateOfBirth,
         string bloodType,
         string phone)
     {
-        Id = _nextId;
-        _nextId++;
+        Id = _nextId++;
 
         FirstName = firstName;
         LastName = lastName;
-        DateOfBirth = dob;
+        DateOfBirth = dateOfBirth;
         BloodType = bloodType;
         Phone = phone;
         Email = "";
@@ -93,6 +88,7 @@ public class Patient
 
     public override string ToString()
     {
-        return $"[{Id}] {FullName} | Вік: {Age} ({GetAgeCategory()}) | Кров: {BloodType} | Тел: {Phone}";
+        return $"[{Id}] {FullName} | Вік: {Age} ({GetAgeCategory()}) | " +
+               $"Кров: {BloodType} | Тел: {Phone}";
     }
 }
