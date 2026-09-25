@@ -89,6 +89,7 @@ while (true)
     Console.WriteLine("3. Записи");
     Console.WriteLine("4. Розклад");
     Console.WriteLine("5. Звіт");
+    Console.WriteLine("6. Зростаючий масив");
     Console.WriteLine("0. Вийти");
     Console.Write("Ваш вибір: ");
 
@@ -435,7 +436,9 @@ static void AppointmentMenu(AppointmentManager manager)
                 }
 
                 break;
-
+            case "6":
+                TestGrowableManager();
+                break;
             case "0":
                 return;
 
@@ -444,4 +447,26 @@ static void AppointmentMenu(AppointmentManager manager)
                 break;
         }
     }
+}
+static void TestGrowableManager()
+{
+    Console.WriteLine();
+    Console.WriteLine("=== Тест зростаючого масиву ===");
+
+    GrowablePatientManager manager =
+        new GrowablePatientManager();
+
+    Patient patient1 = new Patient("Анна", "Іваненко");
+    Patient patient2 = new Patient("Олег", "Петренко");
+    Patient patient3 = new Patient("Марія", "Коваль");
+    Patient patient4 = new Patient("Іван", "Бойко");
+    Patient patient5 = new Patient("Олена", "Мельник");
+
+    manager.Add(patient1);
+    manager.Add(patient2);
+    manager.Add(patient3);
+    manager.Add(patient4);
+    manager.Add(patient5);
+
+    manager.DisplayAll();
 }
