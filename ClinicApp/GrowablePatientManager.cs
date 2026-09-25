@@ -2,29 +2,37 @@
 
 public class GrowablePatientManager
 {
-    private Patient[] _patients;
-    private int _count;
+    private Patient[] _patients = new Patient[4];
+
+    private int _count = 0;
 
     public int Count
     {
-        get
-        {
-            return _count;
-        }
+        get { return _count; }
     }
 
     public int Capacity
     {
-        get
-        {
-            return _patients.Length;
-        }
+        get { return _patients.Length; }
     }
 
-    public GrowablePatientManager()
+    private void Grow()
     {
-        _patients = new Patient[2];
-        _count = 0;
+        int oldCapacity = _patients.Length;
+        int newCapacity = oldCapacity * 2;
+
+        Patient[] newPatients = new Patient[newCapacity];
+
+        for (int i = 0; i < _count; i++)
+        {
+            newPatients[i] = _patients[i];
+        }
+
+        _patients = newPatients;
+
+        Console.WriteLine(
+            $"  Масив заповнений! Розширення: " +
+            $"{oldCapacity} → {newCapacity}");
     }
 
     public void Add(Patient patient)
@@ -38,25 +46,8 @@ public class GrowablePatientManager
         _count++;
 
         Console.WriteLine(
-            $"Пацієнта [{patient.Id}] {patient.FullName} додано. " +
-            $"Count: {_count}, Capacity: {_patients.Length}");
-    }
-
-    private void Grow()
-    {
-        int newSize = _patients.Length * 2;
-
-        Patient[] newPatients = new Patient[newSize];
-
-        for (int i = 0; i < _count; i++)
-        {
-            newPatients[i] = _patients[i];
-        }
-
-        _patients = newPatients;
-
-        Console.WriteLine(
-            $"Масив збільшено до {_patients.Length} елементів.");
+            $"  Додано [{patient.Id}]. " +
+            $"Розмір: {_count} / {Capacity}");
     }
 
     public Patient? FindById(int id)
@@ -64,19 +55,51 @@ public class GrowablePatientManager
         for (int i = 0; i < _count; i++)
         {
             if (_patients[i].Id == id)
-            {
                 return _patients[i];
-            }
         }
 
         return null;
     }
 
+    public bool Remove(int id)
+    {
+        int foundIndex = -1;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_patients[i].Id == id)
+            {
+                foundIndex = i;
+                break;
+            }
+        }
+
+        if (foundIndex == -1)
+            return false;
+
+        for (int i = foundIndex; i < _count - 1; i++)
+        {
+            _patients[i] = _patients[i + 1];
+        }
+
+        _patients[_count - 1] = null!;
+        _count--;
+
+        return true;
+    }
+
     public void DisplayAll()
     {
+        if (_count == 0)
+        {
+            Console.WriteLine("Список пацієнтів порожній.");
+            Console.WriteLine($"Ємність масиву: {Capacity}");
+            return;
+        }
+
         Console.WriteLine();
         Console.WriteLine(
-            $"=== Пацієнти: {_count}, місткість: {_patients.Length} ===");
+            $"=== Пацієнти ({_count} / {Capacity}) ===");
 
         for (int i = 0; i < _count; i++)
         {
