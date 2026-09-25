@@ -1,5 +1,4 @@
 ﻿namespace ClinicApp;
-// Lab03 Task02
 
 public class Doctor
 {
@@ -49,22 +48,12 @@ public class Doctor
     }
 
     public Doctor()
-        : this(
-            "Невідомий",
-            "Лікар",
-            "Невідомо",
-            "Невідомо",
-            "0000000000")
+        : this("Невідомий", "Лікар", "Невідомо", "N/A", "0000000000")
     {
     }
 
     public Doctor(string firstName, string lastName, string speciality)
-        : this(
-            firstName,
-            lastName,
-            speciality,
-            "Невідомо",
-            "0000000000")
+        : this(firstName, lastName, speciality, "N/A", "0000000000")
     {
     }
 
@@ -75,8 +64,7 @@ public class Doctor
         string licenseNumber,
         string phone)
     {
-        Id = _nextId;
-        _nextId++;
+        Id = _nextId++;
 
         FirstName = firstName;
         LastName = lastName;
@@ -106,7 +94,7 @@ public class Doctor
             status = "не в робочий час";
         }
 
-        return $"[{Id}] {FullName} | {Speciality} | {LicenseNumber} | Тел: {Phone} | " +
-               $"{WorkSchedule} ({WorkingHoursPerDay} год) | {status}";
+        return $"[{Id}] {FullName} | {Speciality} | {LicenseNumber} | " +
+               $"Тел: {Phone} | {WorkSchedule} ({WorkingHoursPerDay} год) | {status}";
     }
 }
