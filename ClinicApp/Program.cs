@@ -1,5 +1,11 @@
 ﻿using ClinicApp;
 
+
+// ==================== CLINIC ====================
+
+Clinic clinic = new Clinic();
+
+
 // ==================== ПАЦІЄНТИ ====================
 
 Patient patient1 = new Patient(
@@ -30,17 +36,14 @@ Patient patient4 = new Patient();
 
 Patient patient5 = new Patient("Марія", "Ткач");
 
-Console.WriteLine(patient1);
-Console.WriteLine(patient2);
-Console.WriteLine(patient3);
-Console.WriteLine(patient4);
-Console.WriteLine(patient5);
+clinic.Patients.Add(patient1);
+clinic.Patients.Add(patient2);
+clinic.Patients.Add(patient3);
+clinic.Patients.Add(patient4);
+clinic.Patients.Add(patient5);
 
 
 // ==================== ЛІКАРІ ====================
-
-Console.WriteLine();
-Console.WriteLine("=== Лікарі ===");
 
 Doctor doctor1 = new Doctor(
     "Олег",
@@ -70,47 +73,60 @@ Doctor doctor3 = new Doctor(
     "Педіатрія"
 );
 
-Console.WriteLine(doctor1);
-Console.WriteLine(doctor2);
-Console.WriteLine(doctor3);
+clinic.Doctors.Add(doctor1);
+clinic.Doctors.Add(doctor2);
+clinic.Doctors.Add(doctor3);
 
 
-// ==================== PATIENT MANAGER ====================
+// ==================== ГОЛОВНЕ МЕНЮ ====================
 
-PatientManager patientManager = new PatientManager();
+while (true)
+{
+    Console.WriteLine();
+    Console.WriteLine("========== КЛІНІКА ==========");
+    Console.WriteLine("1. Пацієнти");
+    Console.WriteLine("2. Лікарі");
+    Console.WriteLine("3. Записи");
+    Console.WriteLine("4. Розклад");
+    Console.WriteLine("5. Звіт");
+    Console.WriteLine("0. Вийти");
+    Console.Write("Ваш вибір: ");
 
-patientManager.Add(patient1);
-patientManager.Add(patient2);
-patientManager.Add(patient3);
-patientManager.Add(patient4);
-patientManager.Add(patient5);
+    string choice = Console.ReadLine()!;
+
+    switch (choice)
+    {
+        case "1":
+            PatientMenu(clinic.Patients);
+            break;
+
+        case "2":
+            DoctorMenu(clinic.Doctors);
+            break;
+
+        case "3":
+            AppointmentMenu(clinic.Appointments);
+            break;
+
+        case "4":
+            clinic.DisplaySchedule();
+            break;
+
+        case "5":
+            clinic.GenerateReport();
+            break;
+
+        case "0":
+            return;
+
+        default:
+            Console.WriteLine("Невірний вибір.");
+            break;
+    }
+}
 
 
-// ==================== DOCTOR MANAGER ====================
-
-DoctorManager doctorManager = new DoctorManager();
-
-doctorManager.Add(doctor1);
-doctorManager.Add(doctor2);
-doctorManager.Add(doctor3);
-
-
-// ==================== APPOINTMENT MANAGER ====================
-
-AppointmentManager appointmentManager =
-    new AppointmentManager(patientManager, doctorManager);
-
-
-// ==================== МЕНЮ ====================
-
-PatientMenu(patientManager);
-DoctorMenu(doctorManager);
-AppointmentMenu(appointmentManager);
-
-
-// ==========================================================
-//                       PATIENT MENU
-// ==========================================================
+// ==================== PATIENT MENU ====================
 
 static void PatientMenu(PatientManager manager)
 {
@@ -123,7 +139,7 @@ static void PatientMenu(PatientManager manager)
         Console.WriteLine("3. Знайти за ім'ям");
         Console.WriteLine("4. Видалити");
         Console.WriteLine("5. Статистика");
-        Console.WriteLine("0. Вийти");
+        Console.WriteLine("0. Назад");
         Console.Write("Ваш вибір: ");
 
         string choice = Console.ReadLine()!;
@@ -168,18 +184,12 @@ static void PatientMenu(PatientManager manager)
             case "4":
                 Console.Write("Введіть ID пацієнта: ");
 
-                int id;
-
-                if (int.TryParse(Console.ReadLine(), out id))
+                if (int.TryParse(Console.ReadLine(), out int id))
                 {
                     if (manager.Remove(id))
-                    {
                         Console.WriteLine("Пацієнта видалено.");
-                    }
                     else
-                    {
                         Console.WriteLine("Пацієнта не знайдено.");
-                    }
                 }
                 else
                 {
@@ -203,9 +213,7 @@ static void PatientMenu(PatientManager manager)
 }
 
 
-// ==========================================================
-//                       DOCTOR MENU
-// ==========================================================
+// ==================== DOCTOR MENU ====================
 
 static void DoctorMenu(DoctorManager manager)
 {
@@ -218,7 +226,7 @@ static void DoctorMenu(DoctorManager manager)
         Console.WriteLine("3. Видалити");
         Console.WriteLine("4. Статистика");
         Console.WriteLine("5. Перевірити доступність");
-        Console.WriteLine("0. Вийти");
+        Console.WriteLine("0. Назад");
         Console.Write("Ваш вибір: ");
 
         string choice = Console.ReadLine()!;
@@ -252,18 +260,12 @@ static void DoctorMenu(DoctorManager manager)
             case "3":
                 Console.Write("Введіть ID лікаря: ");
 
-                int id;
-
-                if (int.TryParse(Console.ReadLine(), out id))
+                if (int.TryParse(Console.ReadLine(), out int id))
                 {
                     if (manager.Remove(id))
-                    {
                         Console.WriteLine("Лікаря видалено.");
-                    }
                     else
-                    {
                         Console.WriteLine("Лікаря не знайдено.");
-                    }
                 }
                 else
                 {
@@ -279,9 +281,7 @@ static void DoctorMenu(DoctorManager manager)
             case "5":
                 Console.Write("Введіть ID лікаря: ");
 
-                int doctorId;
-
-                if (!int.TryParse(Console.ReadLine(), out doctorId))
+                if (!int.TryParse(Console.ReadLine(), out int doctorId))
                 {
                     Console.WriteLine("Некоректний ID.");
                     break;
@@ -297,9 +297,7 @@ static void DoctorMenu(DoctorManager manager)
 
                 Console.Write("Введіть годину (0-23): ");
 
-                int hour;
-
-                if (!int.TryParse(Console.ReadLine(), out hour) ||
+                if (!int.TryParse(Console.ReadLine(), out int hour) ||
                     hour < 0 || hour > 23)
                 {
                     Console.WriteLine("Некоректна година.");
@@ -307,13 +305,9 @@ static void DoctorMenu(DoctorManager manager)
                 }
 
                 if (doctor.CanAcceptAt(hour))
-                {
                     Console.WriteLine("Лікар доступний у цю годину.");
-                }
                 else
-                {
                     Console.WriteLine("Лікар не доступний у цю годину.");
-                }
 
                 break;
 
@@ -328,9 +322,7 @@ static void DoctorMenu(DoctorManager manager)
 }
 
 
-// ==========================================================
-//                    APPOINTMENT MENU
-// ==========================================================
+// ==================== APPOINTMENT MENU ====================
 
 static void AppointmentMenu(AppointmentManager manager)
 {
@@ -343,7 +335,7 @@ static void AppointmentMenu(AppointmentManager manager)
         Console.WriteLine("3. Майбутні записи");
         Console.WriteLine("4. Скасувати");
         Console.WriteLine("5. Завершити");
-        Console.WriteLine("0. Вийти");
+        Console.WriteLine("0. Назад");
         Console.Write("Ваш вибір: ");
 
         string choice = Console.ReadLine()!;
