@@ -74,8 +74,56 @@ patientManager.Add(patient2);
 patientManager.Add(patient3);
 patientManager.Add(patient4);
 patientManager.Add(patient5);
+DoctorManager doctorManager = new DoctorManager();
+
+doctorManager.Add(doctor1);
+doctorManager.Add(doctor2);
+doctorManager.Add(doctor3);
+Console.WriteLine();
+Console.WriteLine("=== Записи ===");
+
+Appointment appointment1 = new Appointment(
+    patient1.Id,
+    doctor1.Id,
+    System.DateTime.Now.AddDays(1),
+    "Плановий огляд"
+);
+
+Appointment appointment2 = new Appointment(
+    patient2.Id,
+    doctor2.Id,
+    System.DateTime.Now.AddDays(2),
+    "Консультація"
+);
+
+Appointment appointment3 = new Appointment(
+    patient3.Id,
+    doctor3.Id,
+    System.DateTime.Now.AddDays(3),
+    "Повторний огляд"
+);
+
+Console.WriteLine(appointment1);
+Console.WriteLine(appointment2);
+Console.WriteLine(appointment3);
+
+Console.WriteLine();
+Console.WriteLine("Скасовуємо запис A1:");
+Console.WriteLine(appointment1.Cancel());
+Console.WriteLine(appointment1);
+
+Console.WriteLine();
+Console.WriteLine("Пробуємо завершити вже скасований A1:");
+Console.WriteLine(appointment1.Complete());
+Console.WriteLine(appointment1);
+
+Console.WriteLine();
+Console.WriteLine("Завершуємо запис A2:");
+Console.WriteLine(appointment2.Complete());
+Console.WriteLine(appointment2);
 
 PatientMenu(patientManager);
+DoctorMenu(doctorManager);
 
 static void PatientMenu(PatientManager manager)
 {
@@ -155,6 +203,125 @@ static void PatientMenu(PatientManager manager)
 
             case "5":
                 manager.DisplayStats();
+                break;
+
+            case "0":
+                return;
+
+            default:
+                Console.WriteLine("Невірний вибір.");
+                break;
+        }
+    }
+}
+static void DoctorMenu(DoctorManager manager)
+{
+    while (true)
+    {
+        Console.WriteLine();
+        Console.WriteLine("=== Лікарі ===");
+        Console.WriteLine("1. Показати всіх");
+        Console.WriteLine("2. Знайти за спеціальністю");
+        Console.WriteLine("3. Видалити");
+        Console.WriteLine("4. Статистика");
+        Console.WriteLine("5. Перевірити доступність");
+        Console.WriteLine("0. Вийти");
+        Console.Write("Ваш вибір: ");
+
+        string choice = Console.ReadLine()!;
+
+        switch (choice)
+        {
+            case "1":
+                manager.DisplayAll();
+                break;
+
+            case "2":
+                Console.Write("Введіть спеціальність: ");
+                string speciality = Console.ReadLine()!;
+
+                Doctor[] found = manager.FindBySpeciality(speciality);
+
+                if (found.Length == 0)
+                {
+                    Console.WriteLine("Лікарів не знайдено.");
+                }
+                else
+                {
+                    for (int i = 0; i < found.Length; i++)
+                    {
+                        Console.WriteLine(found[i]);
+                    }
+                }
+
+                break;
+
+            case "3":
+                Console.Write("Введіть ID лікаря: ");
+
+                int id;
+
+                if (int.TryParse(Console.ReadLine(), out id))
+                {
+                    if (manager.Remove(id))
+                    {
+                        Console.WriteLine("Лікаря видалено.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Лікаря не знайдено.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Некоректний ID.");
+                }
+
+                break;
+
+            case "4":
+                manager.DisplayStats();
+                break;
+
+            case "5":
+                Console.Write("Введіть ID лікаря: ");
+
+                int doctorId;
+
+                if (!int.TryParse(Console.ReadLine(), out doctorId))
+                {
+                    Console.WriteLine("Некоректний ID.");
+                    break;
+                }
+
+                Doctor? doctor = manager.FindById(doctorId);
+
+                if (doctor == null)
+                {
+                    Console.WriteLine("Лікаря не знайдено.");
+                    break;
+                }
+
+                Console.Write("Введіть годину (0-23): ");
+
+                int hour;
+
+                if (!int.TryParse(Console.ReadLine(), out hour) ||
+                    hour < 0 || hour > 23)
+                {
+                    Console.WriteLine("Некоректна година.");
+                    break;
+                }
+
+                if (doctor.CanAcceptAt(hour))
+                {
+                    Console.WriteLine("Лікар доступний у цю годину.");
+                }
+                else
+                {
+                    Console.WriteLine("Лікар не доступний у цю годину.");
+                }
+
                 break;
 
             case "0":
