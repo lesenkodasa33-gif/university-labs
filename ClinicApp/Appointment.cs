@@ -1,4 +1,5 @@
-﻿namespace ClinicApp;
+﻿
+namespace ClinicApp;
 
 public class Appointment
 {
@@ -14,7 +15,7 @@ public class Appointment
 
     public int DurationMinutes { get; set; }
 
-    public string Status { get; private set; }
+    public AppointmentStatus Status { get; private set; }
 
     public string Notes { get; private set; }
 
@@ -31,7 +32,7 @@ public class Appointment
         get
         {
             return ScheduledAt > DateTime.Now &&
-                   Status == "Scheduled";
+                   Status == AppointmentStatus.Scheduled;
         }
     }
 
@@ -47,22 +48,21 @@ public class Appointment
         DoctorId = doctorId;
 
         ScheduledAt = scheduledAt;
-
         DurationMinutes = durationMinutes;
 
-        Status = "Scheduled";
+        Status = AppointmentStatus.Scheduled;
 
         Notes = "";
     }
 
     public bool Cancel(string reason = "")
     {
-        if (Status != "Scheduled")
+        if (Status != AppointmentStatus.Scheduled)
         {
             return false;
         }
 
-        Status = "Cancelled";
+        Status = AppointmentStatus.Cancelled;
 
         if (reason != "")
         {
@@ -74,12 +74,12 @@ public class Appointment
 
     public bool Complete()
     {
-        if (Status != "Scheduled")
+        if (Status != AppointmentStatus.Scheduled)
         {
             return false;
         }
 
-        Status = "Completed";
+        Status = AppointmentStatus.Completed;
 
         return true;
     }

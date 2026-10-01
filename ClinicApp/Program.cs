@@ -8,21 +8,21 @@ clinic.Patients.Add(new Patient(
     "Іван",
     "Петренко",
     new DateTime(1985, 5, 10),
-    "A+",
+    BloodType.APositive,
     "0501234567"));
 
 clinic.Patients.Add(new Patient(
     "Олена",
     "Коваль",
     new DateTime(1992, 8, 15),
-    "B-",
+    BloodType.BNegative,
     "0672345678"));
 
 clinic.Patients.Add(new Patient(
     "Максим",
     "Бойко",
     new DateTime(2010, 3, 20),
-    "O+",
+    BloodType.OPositive,
     "0933456789"));
 
 clinic.Patients.Add(new Patient("Марія", "Ткач"));
@@ -33,7 +33,7 @@ clinic.Patients.Add(new Patient("Марія", "Ткач"));
 Doctor doctor1 = new Doctor(
     "Олег",
     "Сидоренко",
-    "Кардіологія",
+    Speciality.Cardiology,
     "LIC-001",
     "0441234567");
 
@@ -44,7 +44,7 @@ doctor1.WorkEndHour = 16;
 Doctor doctor2 = new Doctor(
     "Наталія",
     "Мороз",
-    "Неврологія",
+    Speciality.Neurology,
     "LIC-002",
     "0442345678");
 
@@ -55,7 +55,7 @@ doctor2.WorkEndHour = 18;
 Doctor doctor3 = new Doctor(
     "Андрій",
     "Власенко",
-    "Педіатрія",
+    Speciality.Pediatrics,
     "LIC-003",
     "0443456789");
 
@@ -255,8 +255,16 @@ static void DoctorMenu(Clinic clinic)
                 Console.Write("Прізвище: ");
                 string lastName = Console.ReadLine() ?? "";
 
+                Console.WriteLine("Доступні спеціальності:");
+                Console.WriteLine(string.Join(", ", Enum.GetNames<Speciality>()));
                 Console.Write("Спеціальність: ");
-                string speciality = Console.ReadLine() ?? "";
+                string specialityInput = Console.ReadLine() ?? "";
+                if (!Enum.TryParse<Speciality>(specialityInput, true, out Speciality speciality) ||
+                    !Enum.IsDefined(speciality))
+                {
+                    Console.WriteLine("Некоректна спеціальність.");
+                    break;
+                }
 
                 Console.Write("Номер ліцензії: ");
                 string license = Console.ReadLine() ?? "";
@@ -550,7 +558,7 @@ static void GrowablePatientTest()
             "Тест",
             "Пацієнт" + i,
             new DateTime(2000, 1, 1),
-            "O+",
+            BloodType.OPositive,
             "0000000000");
 
         manager.Add(patient);

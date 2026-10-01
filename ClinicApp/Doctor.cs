@@ -1,4 +1,5 @@
-﻿namespace ClinicApp;
+﻿
+namespace ClinicApp;
 
 public class Doctor
 {
@@ -8,7 +9,7 @@ public class Doctor
 
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string Speciality { get; set; }
+    public Speciality Speciality { get; set; }
     public string LicenseNumber { get; set; }
     public string Phone { get; set; }
 
@@ -48,19 +49,25 @@ public class Doctor
     }
 
     public Doctor()
-        : this("Невідомий", "Лікар", "Невідомо", "N/A", "0000000000")
-    {
-    }
-
-    public Doctor(string firstName, string lastName, string speciality)
-        : this(firstName, lastName, speciality, "N/A", "0000000000")
+        : this("Невідомий", "Лікар",
+               ClinicApp.Speciality.General,
+               "N/A", "0000000000")
     {
     }
 
     public Doctor(
         string firstName,
         string lastName,
-        string speciality,
+        Speciality speciality)
+        : this(firstName, lastName, speciality,
+               "N/A", "0000000000")
+    {
+    }
+
+    public Doctor(
+        string firstName,
+        string lastName,
+        Speciality speciality,
         string licenseNumber,
         string phone)
     {
@@ -78,7 +85,8 @@ public class Doctor
 
     public bool CanAcceptAt(int hour)
     {
-        return hour >= WorkStartHour && hour < WorkEndHour;
+        return hour >= WorkStartHour &&
+               hour < WorkEndHour;
     }
 
     public override string ToString()
@@ -95,6 +103,7 @@ public class Doctor
         }
 
         return $"[{Id}] {FullName} | {Speciality} | {LicenseNumber} | " +
-               $"Тел: {Phone} | {WorkSchedule} ({WorkingHoursPerDay} год) | {status}";
+               $"Тел: {Phone} | {WorkSchedule} " +
+               $"({WorkingHoursPerDay} год) | {status}";
     }
 }
