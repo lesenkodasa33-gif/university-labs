@@ -13,8 +13,7 @@ public class Doctor
     public string LicenseNumber { get; set; }
     public string Phone { get; set; }
 
-    public int WorkStartHour { get; set; }
-    public int WorkEndHour { get; set; }
+    public WorkSchedule Schedule { get; set; }
 
     public string FullName
     {
@@ -28,15 +27,7 @@ public class Doctor
     {
         get
         {
-            return WorkEndHour - WorkStartHour;
-        }
-    }
-
-    public string WorkSchedule
-    {
-        get
-        {
-            return $"{WorkStartHour:D2}:00–{WorkEndHour:D2}:00";
+            return Schedule.HoursPerDay;
         }
     }
 
@@ -44,7 +35,7 @@ public class Doctor
     {
         get
         {
-            return CanAcceptAt(DateTime.Now.Hour);
+            return Schedule.IsNow;
         }
     }
 
@@ -79,14 +70,12 @@ public class Doctor
         LicenseNumber = licenseNumber;
         Phone = phone;
 
-        WorkStartHour = 8;
-        WorkEndHour = 17;
+        Schedule = new WorkSchedule(8, 17);
     }
 
     public bool CanAcceptAt(int hour)
     {
-        return hour >= WorkStartHour &&
-               hour < WorkEndHour;
+        return Schedule.Contains(hour);
     }
 
     public override string ToString()
@@ -103,7 +92,7 @@ public class Doctor
         }
 
         return $"[{Id}] {FullName} | {Speciality} | {LicenseNumber} | " +
-               $"Тел: {Phone} | {WorkSchedule} " +
+               $"Тел: {Phone} | {Schedule.Display} " +
                $"({WorkingHoursPerDay} год) | {status}";
     }
 }

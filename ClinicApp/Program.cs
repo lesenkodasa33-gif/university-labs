@@ -37,8 +37,7 @@ Doctor doctor1 = new Doctor(
     "LIC-001",
     "0441234567");
 
-doctor1.WorkStartHour = 8;
-doctor1.WorkEndHour = 16;
+doctor1.Schedule = new WorkSchedule(8, 16);
 
 
 Doctor doctor2 = new Doctor(
@@ -48,9 +47,7 @@ Doctor doctor2 = new Doctor(
     "LIC-002",
     "0442345678");
 
-doctor2.WorkStartHour = 9;
-doctor2.WorkEndHour = 18;
-
+doctor2.Schedule = new WorkSchedule(9, 18);
 
 Doctor doctor3 = new Doctor(
     "Андрій",
@@ -59,8 +56,7 @@ Doctor doctor3 = new Doctor(
     "LIC-003",
     "0443456789");
 
-doctor3.WorkStartHour = 8;
-doctor3.WorkEndHour = 17;
+doctor3.Schedule = new WorkSchedule(8, 17);
 
 
 clinic.Doctors.Add(doctor1);
@@ -281,25 +277,34 @@ static void DoctorMenu(Clinic clinic)
 
                 Console.Write("Початок роботи (0-23): ");
 
-                if (int.TryParse(Console.ReadLine(), out int startHour) &&
-                    startHour >= 0 &&
-                    startHour <= 23)
+                if (!int.TryParse(Console.ReadLine(), out int startHour))
                 {
-                    doctor.WorkStartHour = startHour;
+                    Console.WriteLine("Некоректний час.");
+                    break;
                 }
 
-                Console.Write("Кінець роботи (0-23): ");
+                Console.Write("Кінець роботи (1-24): ");
 
-                if (int.TryParse(Console.ReadLine(), out int endHour) &&
-                    endHour >= 0 &&
-                    endHour <= 23)
+                if (!int.TryParse(Console.ReadLine(), out int endHour))
                 {
-                    doctor.WorkEndHour = endHour;
+                    Console.WriteLine("Некоректний час.");
+                    break;
                 }
+
+                if (startHour < 0 || startHour > 23 ||
+                    endHour < 1 || endHour > 24 ||
+                    startHour >= endHour)
+                {
+                    Console.WriteLine("Некоректний графік.");
+                    break;
+                }
+
+                doctor.Schedule = new WorkSchedule(startHour, endHour);
 
                 clinic.Doctors.Add(doctor);
                 break;
 
+               
             case "3":
                 Console.Write("Спеціальність: ");
                 string searchSpeciality = Console.ReadLine() ?? "";
