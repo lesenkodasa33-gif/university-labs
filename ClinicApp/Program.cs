@@ -331,17 +331,12 @@ static void DoctorMenu(Clinic clinic)
 
                 if (int.TryParse(Console.ReadLine(), out int doctorId))
                 {
-                    Doctor? foundDoctor =
-                        clinic.Doctors.FindById(doctorId);
 
-                    if (foundDoctor == null)
-                    {
-                        Console.WriteLine("Лікаря не знайдено.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(foundDoctor);
-                    }
+                    Doctor? foundDoctor = clinic.Doctors.FindById(doctorId);
+
+                    Console.WriteLine(
+                        foundDoctor?.ToString() ?? "Лікаря не знайдено.");
+
                 }
 
                 break;

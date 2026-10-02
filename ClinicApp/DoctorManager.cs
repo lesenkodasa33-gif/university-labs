@@ -55,6 +55,20 @@ public class DoctorManager
         return null;
     }
 
+    public bool TryFindById(int id, out Doctor doctor)
+    {
+        Doctor? found = FindById(id);
+
+        if (found != null)
+        {
+            doctor = found;
+            return true;
+        }
+
+        doctor = null!;
+        return false;
+    }
+
 
     public Doctor[] FindBySpeciality(string speciality)
     {
@@ -88,7 +102,32 @@ public class DoctorManager
         return result;
     }
 
+    public Doctor[] FindBySpeciality(Speciality speciality)
+    {
+        int foundCount = 0;
 
+        for (int i = 0; i < _count; i++)
+        {
+            if (_doctors[i].Speciality == speciality)
+            {
+                foundCount++;
+            }
+        }
+
+        Doctor[] result = new Doctor[foundCount];
+        int resultIndex = 0;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_doctors[i].Speciality == speciality)
+            {
+                result[resultIndex] = _doctors[i];
+                resultIndex++;
+            }
+        }
+
+        return result;
+    }
     public Doctor[] GetAll()
     {
         Doctor[] result = new Doctor[_count];
