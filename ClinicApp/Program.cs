@@ -131,6 +131,16 @@ while (true)
 
 static void PatientMenu(Clinic clinic)
 {
+    Console.WriteLine("Демонстрація копіювання структури:");
+
+    WorkSchedule morning = new WorkSchedule(8, 16);
+    WorkSchedule copy = morning;
+
+    copy = new WorkSchedule(10, 18);
+
+    Console.WriteLine("Оригінал: " + morning);
+    Console.WriteLine("Копія: " + copy);
+
     while (true)
     {
         Console.WriteLine();
