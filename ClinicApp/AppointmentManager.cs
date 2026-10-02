@@ -19,7 +19,19 @@ public class AppointmentManager
             return _count;
         }
     }
+    public Appointment this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= _count)
+            {
+                throw new IndexOutOfRangeException(
+                    "Запису з таким індексом не існує.");
+            }
 
+            return _appointments[index];
+        }
+    }
     public AppointmentManager(
         PatientManager patients,
         DoctorManager doctors)

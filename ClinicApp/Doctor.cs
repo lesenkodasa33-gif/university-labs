@@ -78,21 +78,19 @@ public class Doctor
         return Schedule.Contains(hour);
     }
 
+
     public override string ToString()
     {
-        string status;
+        string status = IsAvailableNow
+            ? "доступний зараз"
+            : "не в робочий час";
 
-        if (IsAvailableNow)
-        {
-            status = "доступний зараз";
-        }
-        else
-        {
-            status = "не в робочий час";
-        }
-
-        return $"[{Id}] {FullName} | {Speciality} | {LicenseNumber} | " +
-               $"Тел: {Phone} | {Schedule.Display} " +
+        return $"[{Id}] {FullName} | " +
+               $"{ClinicFormatter.FormatSpecialty(Speciality)} | " +
+               $"{LicenseNumber} | " +
+               $"Тел: {ClinicFormatter.FormatPhone(Phone)} | " +
+               $"{Schedule.Display} " +
                $"({WorkingHoursPerDay} год) | {status}";
     }
+
 }

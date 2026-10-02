@@ -14,6 +14,20 @@ public class PatientManager
         }
     }
 
+    public Patient this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= _count)
+            {
+                throw new IndexOutOfRangeException(
+                    "Пацієнта з таким індексом не існує.");
+            }
+
+            return _patients[index];
+        }
+    }
+
     public void Add(Patient patient)
     {
         if (_count >= MaxPatients)

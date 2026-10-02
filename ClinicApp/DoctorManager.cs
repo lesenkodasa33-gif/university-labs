@@ -15,7 +15,19 @@ public class DoctorManager
             return _count;
         }
     }
+    public Doctor this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= _count)
+            {
+                throw new IndexOutOfRangeException(
+                    "Лікаря з таким індексом не існує.");
+            }
 
+            return _doctors[index];
+        }
+    }
     public void Add(Doctor doctor)
     {
         if (_count >= MaxDoctors)
