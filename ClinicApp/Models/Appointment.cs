@@ -14,7 +14,13 @@ public class Appointment
 
     public DateTime ScheduledAt { get; set; }
 
-    public int DurationMinutes { get; set; }
+    private int _durationMinutes;
+
+    public int DurationMinutes
+    {
+        get => _durationMinutes;
+        set => _durationMinutes = value;
+    }
 
     public AppointmentStatus Status { get; private set; }
 

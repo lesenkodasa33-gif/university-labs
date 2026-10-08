@@ -9,12 +9,36 @@ public class Doctor
 
     public int Id { get; }
 
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
+    
     public Speciality Speciality { get; set; }
-    public string LicenseNumber { get; set; }
-    public string Phone { get; set; }
+    private string _firstName = "";
+    private string _lastName = "";
+    private string _licenseNumber = "";
+    private string _phone = "";
 
+    public string FirstName
+    {
+        get => _firstName;
+        set => _firstName = value;
+    }
+
+    public string LastName
+    {
+        get => _lastName;
+        set => _lastName = value;
+    }
+
+    public string LicenseNumber
+    {
+        get => _licenseNumber;
+        set => _licenseNumber = value;
+    }
+
+    public string Phone
+    {
+        get => _phone;
+        set => _phone = value;
+    }
     public WorkSchedule Schedule { get; set; }
 
     public string FullName
