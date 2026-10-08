@@ -18,28 +18,55 @@ public class Patient
     public string FirstName
     {
         get => _firstName;
-        set => _firstName = value;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length > 50)
+                throw new ArgumentException("Ім'я має містити від 1 до 50 символів.");
+
+            _firstName = value;
+        }
     }
 
     public string LastName
     {
         get => _lastName;
-        set => _lastName = value;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length > 50)
+                throw new ArgumentException("Прізвище має містити від 1 до 50 символів.");
+
+            _lastName = value;
+        }
     }
 
     public DateTime DateOfBirth
     {
         get => _dateOfBirth;
-        set => _dateOfBirth = value;
-    }
+        set
+        {
+            if (value > DateTime.Today || value < new DateTime(1900, 1, 1))
+                throw new ArgumentOutOfRangeException(
+                    nameof(value),
+                    "Дата народження має бути між 1900 роком і сьогодні.");
 
-    public BloodType BloodType { get; set; }
+            _dateOfBirth = value;
+        }
+    }
 
     public string Phone
     {
         get => _phone;
-        set => _phone = value;
+        set
+        {
+            if (value == null || value.Length != 10 || !value.All(char.IsDigit))
+                throw new ArgumentException("Телефон повинен містити рівно 10 цифр.");
+
+            _phone = value;
+        }
     }
+
+    public BloodType BloodType { get; set; }
+
 
     public string Email { get; set; }
 
