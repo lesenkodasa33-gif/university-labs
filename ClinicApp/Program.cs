@@ -165,15 +165,29 @@ static void PatientMenu(Clinic clinic)
                 break;
 
             case "2":
-                Console.Write("Ім'я: ");
-                string firstName = Console.ReadLine() ?? "";
+                try
+                {
+                    Console.Write("Ім'я: ");
+                    string firstName = Console.ReadLine() ?? "";
 
-                Console.Write("Прізвище: ");
-                string lastName = Console.ReadLine() ?? "";
+                    Console.Write("Прізвище: ");
+                    string lastName = Console.ReadLine() ?? "";
 
-                Patient patient = new Patient(firstName, lastName);
+                    Patient patient = new Patient(firstName, lastName);
 
-                clinic.Patients.Add(patient);
+                    clinic.Patients.Add(patient);
+
+                    Console.WriteLine("Пацієнта успішно додано.");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Console.WriteLine("Помилка: " + e.Message);
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine("Помилка: " + e.Message);
+                }
+
                 break;
 
             case "3":
@@ -258,66 +272,73 @@ static void DoctorMenu(Clinic clinic)
                 break;
 
             case "2":
-                Console.Write("Ім'я: ");
-                string firstName = Console.ReadLine() ?? "";
-
-                Console.Write("Прізвище: ");
-                string lastName = Console.ReadLine() ?? "";
-
-                Console.WriteLine("Доступні спеціальності:");
-                Console.WriteLine(string.Join(", ", Enum.GetNames<Speciality>()));
-                Console.Write("Спеціальність: ");
-                string specialityInput = Console.ReadLine() ?? "";
-                if (!Enum.TryParse<Speciality>(specialityInput, true, out Speciality speciality) ||
-                    !Enum.IsDefined(speciality))
+                try
                 {
-                    Console.WriteLine("Некоректна спеціальність.");
-                    break;
+                    Console.Write("Ім'я: ");
+                    string firstName = Console.ReadLine() ?? "";
+
+                    Console.Write("Прізвище: ");
+                    string lastName = Console.ReadLine() ?? "";
+
+                    Console.WriteLine("Доступні спеціальності:");
+                    Console.WriteLine(string.Join(", ", Enum.GetNames<Speciality>()));
+
+                    Console.Write("Спеціальність: ");
+                    string specialityInput = Console.ReadLine() ?? "";
+
+                    if (!Enum.TryParse<Speciality>(
+                            specialityInput,
+                            true,
+                            out Speciality speciality) ||
+                        !Enum.IsDefined(speciality))
+                    {
+                        Console.WriteLine("Некоректна спеціальність.");
+                        break;
+                    }
+
+                    Console.Write("Номер ліцензії: ");
+                    string license = Console.ReadLine() ?? "";
+
+                    Console.Write("Телефон: ");
+                    string phone = Console.ReadLine() ?? "";
+
+                    Console.Write("Початок роботи (0-23): ");
+                    if (!int.TryParse(Console.ReadLine(), out int startHour))
+                    {
+                        Console.WriteLine("Некоректний час.");
+                        break;
+                    }
+
+                    Console.Write("Кінець роботи (1-24): ");
+                    if (!int.TryParse(Console.ReadLine(), out int endHour))
+                    {
+                        Console.WriteLine("Некоректний час.");
+                        break;
+                    }
+
+                    Doctor doctor = new Doctor(
+                        firstName,
+                        lastName,
+                        speciality,
+                        license,
+                        phone);
+
+                    doctor.Schedule = new WorkSchedule(startHour, endHour);
+
+                    clinic.Doctors.Add(doctor);
+
+                    Console.WriteLine("Лікаря успішно додано.");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Console.WriteLine("Помилка: " + e.Message);
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine("Помилка: " + e.Message);
                 }
 
-                Console.Write("Номер ліцензії: ");
-                string license = Console.ReadLine() ?? "";
-
-                Console.Write("Телефон: ");
-                string phone = Console.ReadLine() ?? "";
-
-                Doctor doctor = new Doctor(
-                    firstName,
-                    lastName,
-                    speciality,
-                    license,
-                    phone);
-
-                Console.Write("Початок роботи (0-23): ");
-
-                if (!int.TryParse(Console.ReadLine(), out int startHour))
-                {
-                    Console.WriteLine("Некоректний час.");
-                    break;
-                }
-
-                Console.Write("Кінець роботи (1-24): ");
-
-                if (!int.TryParse(Console.ReadLine(), out int endHour))
-                {
-                    Console.WriteLine("Некоректний час.");
-                    break;
-                }
-
-                if (startHour < 0 || startHour > 23 ||
-                    endHour < 1 || endHour > 24 ||
-                    startHour >= endHour)
-                {
-                    Console.WriteLine("Некоректний графік.");
-                    break;
-                }
-
-                doctor.Schedule = new WorkSchedule(startHour, endHour);
-
-                clinic.Doctors.Add(doctor);
                 break;
-
-               
             case "3":
                 Console.Write("Спеціальність: ");
                 string searchSpeciality = Console.ReadLine() ?? "";
@@ -445,11 +466,22 @@ static void AppointmentMenu(Clinic clinic)
                     break;
                 }
 
-                clinic.Appointments.Book(
-                    patientId,
-                    doctorId,
-                    scheduledAt,
-                    duration);
+                try
+                {
+                    clinic.Appointments.Book(
+                        patientId,
+                        doctorId,
+                        scheduledAt,
+                        duration);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Console.WriteLine("Помилка: " + e.Message);
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine("Помилка: " + e.Message);
+                }
 
                 break;
 

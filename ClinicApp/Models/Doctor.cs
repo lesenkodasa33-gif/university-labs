@@ -21,9 +21,7 @@ public class Doctor
         get => _firstName;
         set
         {
-            if (string.IsNullOrWhiteSpace(value) || value.Length > 50)
-                throw new ArgumentException("Ім'я має містити від 1 до 50 символів.");
-
+            ClinicValidator.ValidateName(value, nameof(FirstName));
             _firstName = value;
         }
     }
@@ -33,9 +31,7 @@ public class Doctor
         get => _lastName;
         set
         {
-            if (string.IsNullOrWhiteSpace(value) || value.Length > 50)
-                throw new ArgumentException("Прізвище має містити від 1 до 50 символів.");
-
+            ClinicValidator.ValidateName(value, nameof(LastName));
             _lastName = value;
         }
     }
@@ -57,9 +53,7 @@ public class Doctor
         get => _phone;
         set
         {
-            if (value == null || value.Length != 10 || !value.All(char.IsDigit))
-                throw new ArgumentException("Телефон повинен містити рівно 10 цифр.");
-
+            ClinicValidator.ValidatePhone(value);
             _phone = value;
         }
     }

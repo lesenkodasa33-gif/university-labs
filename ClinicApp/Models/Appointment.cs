@@ -1,5 +1,5 @@
 ﻿using ClinicApp.Enums;
-
+using ClinicApp.Utils;
 namespace ClinicApp.Models;
 
 public class Appointment
@@ -10,6 +10,7 @@ public class Appointment
 
     public int PatientId { get; }
 
+
     public int DoctorId { get; }
 
     public DateTime ScheduledAt { get; set; }
@@ -19,9 +20,15 @@ public class Appointment
     public int DurationMinutes
     {
         get => _durationMinutes;
-        set => _durationMinutes = value;
-    }
+        set
+        {
+            ClinicValidator.ValidatePositive(
+                value,
+                nameof(DurationMinutes));
 
+            _durationMinutes = value;
+        }
+    }
     public AppointmentStatus Status { get; private set; }
 
     public string Notes { get; private set; }
