@@ -1,5 +1,7 @@
-﻿
-namespace ClinicApp;
+﻿using ClinicApp.Enums;
+using ClinicApp.Utils;
+
+namespace ClinicApp.Models;
 
 public class Doctor
 {
@@ -41,7 +43,7 @@ public class Doctor
 
     public Doctor()
         : this("Невідомий", "Лікар",
-               ClinicApp.Speciality.General,
+               Speciality.General,
                "N/A", "0000000000")
     {
     }

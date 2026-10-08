@@ -1,5 +1,7 @@
-﻿
-namespace ClinicApp;
+﻿using ClinicApp.Enums;
+using ClinicApp.Utils;
+
+namespace ClinicApp.Models;
 
 public class Patient
 {
@@ -48,14 +50,14 @@ public class Patient
     public Patient()
         : this("Невідомий", "Пацієнт",
                new DateTime(2000, 1, 1),
-               ClinicApp.BloodType.Unknown, "0000000000")
+               BloodType.Unknown, "0000000000")
     {
     }
 
     public Patient(string firstName, string lastName)
         : this(firstName, lastName,
                new DateTime(2000, 1, 1),
-               ClinicApp.BloodType.Unknown, "0000000000")
+               BloodType.Unknown, "0000000000")
     {
     }
 
