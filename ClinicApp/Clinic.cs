@@ -11,6 +11,8 @@ public class Clinic
 
     public DoctorManager Doctors { get; }
 
+    public MedicalRecordManager MedicalRecords { get; } = new MedicalRecordManager();
+
     public AppointmentManager Appointments { get; }
 
     public Clinic(string name)
