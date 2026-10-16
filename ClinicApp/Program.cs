@@ -80,6 +80,15 @@ clinic.MedicalRecords.Add(new LabResult(
     1, 1, DateTime.Today.AddDays(-5),
     "Гемоглобін", 135, "г/л", "120-150", true));
 
+
+clinic.MedicalRecords.Add(new LabResult(
+    2, 2, DateTime.Today.AddDays(-2),
+    "Глюкоза", 8.5, "ммоль/л", "3.9-5.5", false));
+
+clinic.MedicalRecords.Add(new Diagnosis(
+    2, 2, DateTime.Today.AddDays(-7),
+    "E11", "Цукровий діабет 2 типу", true));
+
 clinic.MedicalRecords.Add(new Prescription(
     1, 1, DateTime.Today.AddDays(-3),
     "Лізиноприл", "10 мг", 30,
