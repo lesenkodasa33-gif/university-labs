@@ -307,10 +307,13 @@ public class MedicalRecordManager
         Console.WriteLine();
         Console.WriteLine($"Активних рецептів: {active.Length}");
 
+
         for (int i = 0; i < active.Length; i++)
         {
-            Console.WriteLine(active[i]);
+            Console.WriteLine(
+                $"{active[i]} | Діє до: {active[i].ExpiresAt:dd.MM.yyyy}");
         }
+
 
         Console.WriteLine("==============================");
     }
