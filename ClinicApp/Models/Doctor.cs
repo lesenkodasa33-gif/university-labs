@@ -1,15 +1,15 @@
 ﻿using ClinicApp.Enums;
 using ClinicApp.Utils;
-
+using ClinicApp.Interfaces;
 namespace ClinicApp.Models;
 
-public class Doctor
+public class Doctor : ISchedulable
 {
     private static int _nextId = 1;
 
     public int Id { get; }
 
-    
+
     public Speciality Speciality { get; set; }
     private string _firstName = "";
     private string _lastName = "";
@@ -137,4 +137,25 @@ public class Doctor
                $"({WorkingHoursPerDay} год) | {status}";
     }
 
+
+    public bool CanSchedule(DateTime at)
+    {
+        return Schedule.Contains(at.Hour);
+    }
+
+    public DateTime[] GetAvailableSlots(DateTime date, int slotCount)
+    {
+        ClinicValidator.ValidatePositive(slotCount, nameof(slotCount));
+
+        int availableCount = Math.Min(slotCount, Schedule.HoursPerDay);
+
+        DateTime[] slots = new DateTime[availableCount];
+
+        for (int i = 0; i < availableCount; i++)
+        {
+            slots[i] = date.Date.AddHours(Schedule.Start + i);
+        }
+
+        return slots;
+    }
 }
