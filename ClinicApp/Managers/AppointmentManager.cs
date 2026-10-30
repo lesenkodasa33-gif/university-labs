@@ -76,11 +76,11 @@ public class AppointmentManager
             return false;
         }
 
-        Appointment appointment = new Appointment(
-            patientId,
-            doctorId,
-            scheduledAt,
-            durationMinutes);
+        Appointment appointment = new RegularAppointment(
+    patientId,
+    doctorId,
+    scheduledAt,
+    durationMinutes);
 
         _appointments[_count] = appointment;
         _count++;
@@ -92,7 +92,55 @@ public class AppointmentManager
 
         return true;
     }
+    public bool BookUrgent(
+    int patientId,
+    int doctorId,
+    DateTime scheduledAt,
+    int durationMinutes,
+    string urgencyNote = "")
+    {
+        Patient? patient = _patients.FindById(patientId);
+        Doctor? doctor = _doctors.FindById(doctorId);
 
+        if (patient == null || doctor == null || _count >= MaxAppointments)
+        {
+            Console.WriteLine("Помилка створення термінового запису.");
+            return false;
+        }
+
+        Appointment appointment = new UrgentAppointment(
+            patientId, doctorId, scheduledAt, urgencyNote, durationMinutes);
+
+        _appointments[_count++] = appointment;
+
+        Console.WriteLine($"Терміновий запис [{appointment.Id}] створено.");
+        return true;
+    }
+
+    public bool BookSpecialist(
+        int patientId,
+        int doctorId,
+        DateTime scheduledAt,
+        int durationMinutes,
+        string consultationTopic = "")
+    {
+        Patient? patient = _patients.FindById(patientId);
+        Doctor? doctor = _doctors.FindById(doctorId);
+
+        if (patient == null || doctor == null || _count >= MaxAppointments)
+        {
+            Console.WriteLine("Помилка створення запису до спеціаліста.");
+            return false;
+        }
+
+        Appointment appointment = new SpecialistAppointment(
+            patientId, doctorId, scheduledAt, consultationTopic, durationMinutes);
+
+        _appointments[_count++] = appointment;
+
+        Console.WriteLine($"Запис до спеціаліста [{appointment.Id}] створено.");
+        return true;
+    }
     public bool Cancel(int id, string reason)
     {
         Appointment? appointment = FindById(id);

@@ -68,7 +68,15 @@ doctor3.Schedule = new WorkSchedule(8, 17);
 clinic.Doctors.Add(doctor1);
 clinic.Doctors.Add(doctor2);
 clinic.Doctors.Add(doctor3);
+// Демонстрація поліморфізму
+clinic.Appointments.Book(
+    1, 1, DateTime.Now.AddDays(1), 30);
 
+clinic.Appointments.BookUrgent(
+    2, 2, DateTime.Now.AddDays(1), 30, "Сильний біль");
+
+clinic.Appointments.BookSpecialist(
+    3, 3, DateTime.Now.AddDays(2), 45, "Консультація");
 clinic.MedicalRecords.Add(new Diagnosis(
     1, 1, DateTime.Today.AddDays(-30),
     "I10", "Гіпертонічна хвороба", true));
@@ -103,7 +111,27 @@ clinic.MedicalRecords.Add(new Prescription(
 
 
 
+// Демонстрація override та new
+UrgentAppointment urgent = new UrgentAppointment(
+    1, 1, DateTime.Now.AddDays(3), "Терміново", 30);
 
+Appointment appointmentAsBase = urgent;
+UrgentAppointment appointmentAsUrgent = urgent;
+
+Console.WriteLine("=== Поліморфізм ===");
+
+Console.WriteLine(appointmentAsBase.GetDescription());
+Console.WriteLine(appointmentAsUrgent.GetDescription());
+
+Console.WriteLine("Пріоритет через Appointment: " +
+    appointmentAsBase.GetPriority());
+
+Console.WriteLine("Пріоритет через UrgentAppointment: " +
+    appointmentAsUrgent.GetPriority());
+
+// GetDescription використовує override — вибір за фактичним типом об'єкта.
+// GetPriority використовує new — вибір за типом змінної.
+// Для поліморфного пріоритету потрібно використовувати virtual та override.
 // ==================== ГОЛОВНЕ МЕНЮ ====================
 
 while (true)
