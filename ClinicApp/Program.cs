@@ -146,6 +146,7 @@ while (true)
     Console.WriteLine("6. Звіт");
     Console.WriteLine("7. Зростаючий масив");
     Console.WriteLine("8. Рахунки");
+    Console.WriteLine("9. Типи записів");
     Console.WriteLine("0. Вийти");
     Console.Write("Ваш вибір: ");
 
@@ -194,7 +195,9 @@ while (true)
         case "8":
             BillingMenu(clinic);
             break;
-
+        case "9":
+            AppointmentTypeMenu(clinic);
+            break;
         case "0":
             return;
 
@@ -1020,7 +1023,45 @@ static void GrowablePatientTest()
             }
         }
 
+    static void AppointmentTypeMenu(Clinic clinic)
+    {
+        Console.WriteLine("\n=== Типи записів ===");
+        Console.WriteLine("1. Термінові");
+        Console.WriteLine("2. До спеціаліста");
+        Console.WriteLine("3. Звичайні");
+        Console.Write("Ваш вибір: ");
+
+        string? choice = Console.ReadLine();
+
+        Appointment[] appointments;
+
+        switch (choice)
+        {
+            case "1":
+                appointments = clinic.Appointments.GetUrgent();
+                break;
+            case "2":
+                appointments = clinic.Appointments.GetSpecialist();
+                break;
+            case "3":
+                appointments = clinic.Appointments.GetRegular();
+                break;
+            default:
+                Console.WriteLine("Невірний вибір.");
+                return;
+        }
+
+        if (appointments.Length == 0)
+        {
+            Console.WriteLine("Записів цього типу немає.");
+            return;
+        }
+
+        foreach (Appointment appointment in appointments)
+            Console.WriteLine(appointment);
     }
+
+}
 
 static void BillingMenu(Clinic clinic)
 {

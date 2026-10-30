@@ -311,7 +311,71 @@ public class AppointmentManager
 
         return result;
     }
+    public Appointment[] GetUrgent()
+    {
+        int count = 0;
 
+        for (int i = 0; i < _count; i++)
+        {
+            if (_appointments[i] is UrgentAppointment)
+                count++;
+        }
+
+        Appointment[] result = new Appointment[count];
+        int index = 0;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_appointments[i] is UrgentAppointment)
+                result[index++] = _appointments[i]!;
+        }
+
+        return result;
+    }
+
+    public Appointment[] GetSpecialist()
+    {
+        int count = 0;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_appointments[i] is SpecialistAppointment)
+                count++;
+        }
+
+        Appointment[] result = new Appointment[count];
+        int index = 0;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_appointments[i] is SpecialistAppointment)
+                result[index++] = _appointments[i]!;
+        }
+
+        return result;
+    }
+
+    public Appointment[] GetRegular()
+    {
+        int count = 0;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_appointments[i] is RegularAppointment)
+                count++;
+        }
+
+        Appointment[] result = new Appointment[count];
+        int index = 0;
+
+        for (int i = 0; i < _count; i++)
+        {
+            if (_appointments[i] is RegularAppointment)
+                result[index++] = _appointments[i]!;
+        }
+
+        return result;
+    }
     public void DisplayAppointment(Appointment appointment)
     {
         Patient? patient = _patients.FindById(appointment.PatientId);
@@ -340,11 +404,11 @@ public class AppointmentManager
         }
 
         string result =
-            $"[{appointment.Id}] " +
-            $"{patientName} → {doctorName} | " +
-            $"{appointment.ScheduledAt:dd.MM.yyyy HH:mm}–" +
-            $"{appointment.EndsAt:HH:mm} | " +
-            $"{appointment.Status}";
+     $"[{appointment.Id}] {appointment.GetDescription()} | " +
+     $"{patientName} → {doctorName} | " +
+     $"{appointment.ScheduledAt:dd.MM.yyyy HH:mm}–" +
+     $"{appointment.EndsAt:HH:mm} | {appointment.Status} | " +
+     $"{appointment.GetCost():F2} грн";
 
         if (appointment.Notes.Length > 0)
         {
