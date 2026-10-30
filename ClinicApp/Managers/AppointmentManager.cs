@@ -1,4 +1,7 @@
-﻿namespace ClinicApp;
+﻿using ClinicApp.Interfaces;
+using ClinicApp.Models;
+
+namespace ClinicApp.Managers;
 
 public class AppointmentManager
 {
@@ -17,6 +20,19 @@ public class AppointmentManager
         get
         {
             return _count;
+        }
+    }
+
+    public Appointment? this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= _count)
+            {
+                return null;
+            }
+
+            return _appointments[index];
         }
     }
 
@@ -214,6 +230,12 @@ public class AppointmentManager
         return result;
     }
 
+    public Appointment[] GetByDate(int year, int month, int day)
+    {
+        DateTime date = new DateTime(year, month, day);
+        return GetByDate(date);
+    }
+
     public Appointment[] GetUpcoming()
     {
         int foundCount = 0;
@@ -296,6 +318,35 @@ public class AppointmentManager
         {
             DisplayAppointment(appointments[i]);
         }
+    }
+
+    public Appointment[] GetAll()
+    {
+        Appointment[] result = new Appointment[_count];
+
+        for (int i = 0; i < _count; i++)
+        {
+            result[i] = _appointments[i];
+        }
+
+        return result;
+    }
+
+    public static int CancelAll(
+        ICancellable[] items,
+        string reason = "")
+    {
+        int cancelledCount = 0;
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].Cancel(reason))
+            {
+                cancelledCount++;
+            }
+        }
+
+        return cancelledCount;
     }
 
     private Appointment? FindById(int id)
