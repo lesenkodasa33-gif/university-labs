@@ -762,40 +762,40 @@ static void GrowablePatientTest()
 
 }
     static void MedicalRecordMenu(Clinic clinic)
+{
+    while (true)
     {
-        while (true)
+        Console.WriteLine();
+        Console.WriteLine("===== МЕДИЧНА КАРТКА =====");
+        Console.WriteLine("1. Зведення по пацієнту");
+        Console.WriteLine("2. Усі записи пацієнта");
+        Console.WriteLine("3. Додати діагноз");
+        Console.WriteLine("4. Додати аналіз");
+        Console.WriteLine("5. Додати рецепт");
+        Console.WriteLine("6. Записи лікаря");
+        Console.WriteLine("0. Назад");
+        Console.Write("Ваш вибір: ");
+
+        string choice = Console.ReadLine() ?? "";
+
+        switch (choice)
         {
-            Console.WriteLine();
-            Console.WriteLine("===== МЕДИЧНА КАРТКА =====");
-            Console.WriteLine("1. Зведення по пацієнту");
-            Console.WriteLine("2. Усі записи пацієнта");
-            Console.WriteLine("3. Додати діагноз");
-            Console.WriteLine("4. Додати аналіз");
-            Console.WriteLine("5. Додати рецепт");
-            Console.WriteLine("6. Записи лікаря");
-            Console.WriteLine("0. Назад");
-            Console.Write("Ваш вибір: ");
+            case "1":
+                Console.Write("ID пацієнта: ");
+                if (int.TryParse(Console.ReadLine(), out int patientId))
+                    clinic.MedicalRecords.DisplayPatientSummary(patientId);
+                else
+                    Console.WriteLine("Некоректний ID.");
+                break;
 
-            string choice = Console.ReadLine() ?? "";
-
-            switch (choice)
-            {
-                case "1":
-                    Console.Write("ID пацієнта: ");
-                    if (int.TryParse(Console.ReadLine(), out int patientId))
-                        clinic.MedicalRecords.DisplayPatientSummary(patientId);
-                    else
-                        Console.WriteLine("Некоректний ID.");
-                    break;
-
-                case "2":
-                    Console.Write("ID пацієнта: ");
-                    if (int.TryParse(Console.ReadLine(), out int id))
-                        clinic.MedicalRecords.DisplayList(
-                            clinic.MedicalRecords.GetByPatient(id));
-                    else
-                        Console.WriteLine("Некоректний ID.");
-                    break;
+            case "2":
+                Console.Write("ID пацієнта: ");
+                if (int.TryParse(Console.ReadLine(), out int id))
+                    clinic.MedicalRecords.DisplayList(
+                        clinic.MedicalRecords.GetByPatient(id));
+                else
+                    Console.WriteLine("Некоректний ID.");
+                break;
 
             case "3":
                 try
@@ -1015,13 +1015,14 @@ static void GrowablePatientTest()
                 break;
 
             case "0":
-                    return;
+                return;
 
-                default:
-                    Console.WriteLine("Цей пункт поки не реалізований.");
-                    break;
-            }
+            default:
+                Console.WriteLine("Цей пункт поки не реалізований.");
+                break;
         }
+    }
+}
 
     static void AppointmentTypeMenu(Clinic clinic)
     {
@@ -1061,7 +1062,7 @@ static void GrowablePatientTest()
             Console.WriteLine(appointment);
     }
 
-}
+
 
 static void BillingMenu(Clinic clinic)
 {
