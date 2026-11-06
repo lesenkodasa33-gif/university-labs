@@ -143,10 +143,11 @@ while (true)
     Console.WriteLine("3. Записи");
     Console.WriteLine("4. Медична картка");
     Console.WriteLine("5. Розклад");
-    Console.WriteLine("6. Звіт");
-    Console.WriteLine("7. Зростаючий масив");
-    Console.WriteLine("8. Рахунки");
-    Console.WriteLine("9. Типи записів");
+    Console.WriteLine("6. Черга очікування");
+    Console.WriteLine("7. Звіт");
+    Console.WriteLine("8. Зростаючий масив");
+    Console.WriteLine("9. Рахунки");
+    Console.WriteLine("10. Типи записів");
     Console.WriteLine("0. Вийти");
     Console.Write("Ваш вибір: ");
 
@@ -186,16 +187,22 @@ while (true)
             break;
 
         case "6":
-            clinic.GenerateReport();
+            WaitingRoomMenu(clinic);
             break;
 
         case "7":
+            clinic.GenerateReport();
+            break;
+
+        case "8":
             GrowablePatientTest();
             break;
-        case "8":
+
+        case "9":
             BillingMenu(clinic);
             break;
-        case "9":
+
+        case "10":
             AppointmentTypeMenu(clinic);
             break;
         case "0":
@@ -761,7 +768,108 @@ static void GrowablePatientTest()
     }
 
 }
-    static void MedicalRecordMenu(Clinic clinic)
+
+static void WaitingRoomMenu(Clinic clinic)
+{
+    while (true)
+    {
+        Console.WriteLine();
+        Console.WriteLine("========== ЧЕРГА ОЧІКУВАННЯ ==========");
+        Console.WriteLine("1. Додати пацієнта за ID");
+        Console.WriteLine("2. Забрати першого пацієнта");
+        Console.WriteLine("3. Переглянути першого пацієнта");
+        Console.WriteLine("4. Показати всю чергу");
+        Console.WriteLine("0. Назад");
+        Console.Write("Ваш вибір: ");
+
+        string choice = Console.ReadLine() ?? "";
+
+        switch (choice)
+        {
+            case "1":
+                Console.Write("Введіть ID пацієнта: ");
+
+                if (!int.TryParse(Console.ReadLine(), out int id))
+                {
+                    Console.WriteLine("Некоректний ID.");
+                    break;
+                }
+
+                Patient? patient = clinic.Patients.FindById(id);
+
+                if (patient == null)
+                {
+                    Console.WriteLine("Пацієнта не знайдено.");
+                }
+                else
+                {
+                    clinic.WaitingRoom.Enqueue(patient);
+                    Console.WriteLine(
+                        $"Пацієнта {patient.FullName} додано до черги.");
+                }
+
+                break;
+
+            case "2":
+                try
+                {
+                    Patient removed = clinic.WaitingRoom.Dequeue();
+
+                    Console.WriteLine(
+                        $"Пацієнта {removed.FullName} забрано з черги.");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                break;
+
+            case "3":
+                try
+                {
+                    Patient first = clinic.WaitingRoom.Peek();
+
+                    Console.WriteLine(
+                        $"Перший у черзі: {first.FullName}");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                break;
+
+            case "4":
+                Patient[] patients = clinic.WaitingRoom.ToArray();
+
+                if (patients.Length == 0)
+                {
+                    Console.WriteLine("Черга порожня.");
+                }
+                else
+                {
+                    Console.WriteLine("\nПацієнти в черзі:");
+
+                    foreach (Patient p in patients)
+                    {
+                        Console.WriteLine(p);
+                    }
+                }
+
+                break;
+
+            case "0":
+                return;
+
+            default:
+                Console.WriteLine("Невірний вибір.");
+                break;
+        }
+    }
+}
+
+static void MedicalRecordMenu(Clinic clinic)
 {
     while (true)
     {

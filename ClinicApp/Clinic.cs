@@ -10,7 +10,7 @@ public class Clinic
     public PatientManager Patients { get; }
 
     public DoctorManager Doctors { get; }
-
+    public WaitingQueue<Patient> WaitingRoom { get; }
     public MedicalRecordManager MedicalRecords { get; } = new MedicalRecordManager();
 
     public AppointmentManager Appointments { get; }
@@ -20,7 +20,7 @@ public class Clinic
         Name = name;
 
         Patients = new PatientManager();
-
+        WaitingRoom = new WaitingQueue<Patient>();
         Doctors = new DoctorManager();
 
         Appointments = new AppointmentManager(
