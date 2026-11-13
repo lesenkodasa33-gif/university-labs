@@ -15,6 +15,7 @@ public class Clinic
 
     public AppointmentManager Appointments { get; }
     public BillingManager Billing { get; }
+    public AnalyticsManager Analytics { get; }
     public Clinic(string name)
     {
         Name = name;
@@ -26,9 +27,14 @@ public class Clinic
         Appointments = new AppointmentManager(
             Patients,
             Doctors);
-        Billing = new BillingManager(Appointments);
-    }
 
+        Billing = new BillingManager(Appointments);
+
+        Analytics = new AnalyticsManager(
+            Appointments,
+            Doctors,
+            Patients);
+    }
     public void DisplaySchedule(DateTime date)
     {
         Console.WriteLine();
