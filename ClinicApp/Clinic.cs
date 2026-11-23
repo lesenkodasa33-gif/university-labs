@@ -16,6 +16,7 @@ public class Clinic
     public AppointmentManager Appointments { get; }
     public BillingManager Billing { get; }
     public ClinicLogger Logger { get; }
+    public ClinicExporter Exporter { get; }
     public Clinic(string name)
     {
         Name = name;
@@ -29,6 +30,7 @@ public class Clinic
             Doctors);
         Billing = new BillingManager(Appointments);
         Logger = new ClinicLogger();
+        Exporter = new ClinicExporter(this);
     }
 
     public void DisplaySchedule(DateTime date)
