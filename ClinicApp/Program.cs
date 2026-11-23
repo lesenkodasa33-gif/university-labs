@@ -32,7 +32,18 @@ clinic.Patients.Add(new Patient(
     "0933456789"));
 
 clinic.Patients.Add(new Patient("Марія", "Ткач"));
+// Завантаження збереженої сесії
+if (clinic.Session.Exists())
+{
+    Console.Write("Знайдено збережену сесію. Завантажити? (y/n): ");
+    string answer = (Console.ReadLine() ?? "").Trim();
 
+    if (answer.Equals("y", StringComparison.OrdinalIgnoreCase))
+    {
+        int loaded = clinic.Session.Load(clinic);
+        Console.WriteLine($"Завантажено {loaded} пацієнтів.");
+    }
+}
 
 // ==================== ЛІКАРІ ====================
 
@@ -203,6 +214,15 @@ while (true)
             FileMenu(clinic);
             break;
         case "0":
+            Console.Write("Зберегти сесію? (y/n): ");
+            string answer = (Console.ReadLine() ?? "").Trim();
+
+            if (answer.Equals("y", StringComparison.OrdinalIgnoreCase))
+            {
+                clinic.Session.Save(clinic);
+                Console.WriteLine("Сесію збережено.");
+            }
+
             return;
 
         default:
