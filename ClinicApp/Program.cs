@@ -3,7 +3,7 @@ using ClinicApp.Enums;
 using ClinicApp.Managers;
 using ClinicApp.Models;
 using ClinicApp.Interfaces;
-
+using ClinicApp.Utils;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.InputEncoding = System.Text.Encoding.UTF8;
 Clinic clinic = new Clinic("Медична Клініка");
@@ -147,6 +147,7 @@ while (true)
     Console.WriteLine("7. Зростаючий масив");
     Console.WriteLine("8. Рахунки");
     Console.WriteLine("9. Типи записів");
+    Console.WriteLine("10. Файли");
     Console.WriteLine("0. Вийти");
     Console.Write("Ваш вибір: ");
 
@@ -197,6 +198,9 @@ while (true)
             break;
         case "9":
             AppointmentTypeMenu(clinic);
+            break;
+        case "10":
+            FileMenu(clinic);
             break;
         case "0":
             return;
@@ -256,16 +260,20 @@ static void PatientMenu(Clinic clinic)
                     Patient patient = new Patient(firstName, lastName);
 
                     clinic.Patients.Add(patient);
+                    clinic.Logger.LogInfo(
+    $"Додано пацієнта #{patient.Id}: {patient.FullName}");
 
                     Console.WriteLine("Пацієнта успішно додано.");
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
                     Console.WriteLine("Помилка: " + e.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + e.Message);
                 }
                 catch (ArgumentException e)
                 {
                     Console.WriteLine("Помилка: " + e.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + e.Message);
                 }
 
                 break;
@@ -407,16 +415,20 @@ static void DoctorMenu(Clinic clinic)
                     doctor.Schedule = new WorkSchedule(startHour, endHour);
 
                     clinic.Doctors.Add(doctor);
+                    clinic.Logger.LogInfo(
+    $"Додано лікаря #{doctor.Id}: {doctor.FullName}");
 
                     Console.WriteLine("Лікаря успішно додано.");
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
                     Console.WriteLine("Помилка: " + e.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + e.Message);
                 }
                 catch (ArgumentException e)
                 {
                     Console.WriteLine("Помилка: " + e.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + e.Message);
                 }
 
                 break;
@@ -585,6 +597,7 @@ static void AppointmentMenu(Clinic clinic)
                     break;
                 }
 
+
                 try
                 {
                     clinic.Appointments.Book(
@@ -592,17 +605,23 @@ static void AppointmentMenu(Clinic clinic)
                         doctorId,
                         scheduledAt,
                         duration);
+
+                    clinic.Logger.LogInfo(
+                        $"Створено запис: пацієнт #{patientId} → лікар #{doctorId}");
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
                     Console.WriteLine("Помилка: " + e.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + e.Message);
                 }
                 catch (ArgumentException e)
                 {
                     Console.WriteLine("Помилка: " + e.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + e.Message);
                 }
 
                 break;
+
 
             case "2":
                 Appointment[] upcoming =
@@ -679,7 +698,7 @@ static void AppointmentMenu(Clinic clinic)
                 clinic.Appointments.Cancel(
                     cancelId,
                     reason);
-
+                clinic.Logger.LogInfo($"Скасовано запис #{cancelId}: {reason}");
                 break;
 
             case "7":
@@ -691,6 +710,7 @@ static void AppointmentMenu(Clinic clinic)
                 {
                     clinic.Appointments.Complete(
                         completeId);
+                    clinic.Logger.LogInfo($"Завершено запис #{completeId}");
                 }
 
                 break;
@@ -846,6 +866,7 @@ static void GrowablePatientTest()
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine("Помилка: " + ex.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + ex.Message);
                 }
                 break;
 
@@ -922,6 +943,7 @@ static void GrowablePatientTest()
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine("Помилка: " + ex.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + ex.Message);
                 }
                 break;
 
@@ -983,6 +1005,7 @@ static void GrowablePatientTest()
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine("Помилка: " + ex.Message);
+                    clinic.Logger.LogWarning("Помилка введення: " + ex.Message);
                 }
                 break;
 
@@ -1140,8 +1163,56 @@ static void BillingMenu(Clinic clinic)
                     appointment.MarkPaid();
                     Console.WriteLine(
                         $"Запис оплачено: {appointment.GetCost()} грн");
+                    clinic.Logger.LogInfo($"Оплачено запис #{paymentId}");
                 }
 
+                break;
+
+            case "0":
+                return;
+
+            default:
+                Console.WriteLine("Невірний вибір.");
+                break;
+        }
+    }
+}
+static void FileMenu(Clinic clinic)
+{
+    while (true)
+    {
+        Console.WriteLine("\n========== ФАЙЛИ ==========");
+        Console.WriteLine("1. Останні рядки лога");
+        Console.WriteLine("2. Очистити лог");
+        Console.WriteLine("0. Назад");
+        Console.Write("Ваш вибір: ");
+
+        string choice = Console.ReadLine() ?? "";
+
+        switch (choice)
+        {
+            case "1":
+                Console.Write("Скільки рядків показати? ");
+
+                if (int.TryParse(Console.ReadLine(), out int n) && n > 0)
+                {
+                    string[] lines = clinic.Logger.GetLastLines(n);
+
+                    foreach (string line in lines)
+                        Console.WriteLine(line);
+
+                    if (lines.Length == 0)
+                        Console.WriteLine("Лог порожній.");
+                }
+                else
+                {
+                    Console.WriteLine("Введіть додатне число.");
+                }
+                break;
+
+            case "2":
+                clinic.Logger.Clear();
+                Console.WriteLine("Лог очищено.");
                 break;
 
             case "0":

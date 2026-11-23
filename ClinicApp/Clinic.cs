@@ -1,6 +1,6 @@
 ﻿using ClinicApp.Managers;
 using ClinicApp.Models;
-
+using ClinicApp.Utils;
 namespace ClinicApp;
 
 public class Clinic
@@ -15,6 +15,7 @@ public class Clinic
 
     public AppointmentManager Appointments { get; }
     public BillingManager Billing { get; }
+    public ClinicLogger Logger { get; }
     public Clinic(string name)
     {
         Name = name;
@@ -27,6 +28,7 @@ public class Clinic
             Patients,
             Doctors);
         Billing = new BillingManager(Appointments);
+        Logger = new ClinicLogger();
     }
 
     public void DisplaySchedule(DateTime date)
