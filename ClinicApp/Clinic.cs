@@ -32,10 +32,12 @@ public class Clinic
             Doctors);
         Billing = new BillingManager(Appointments);
         Logger = new ClinicLogger();
+        Logger.SubscribeEvents(this);
         Exporter = new ClinicExporter(this);
         Session = new SessionManager();
+        TreatmentPlans = new TreatmentPlanManager();
     }
-
+    public TreatmentPlanManager TreatmentPlans { get; }
     public void DisplaySchedule(DateTime date)
     {
         Console.WriteLine();

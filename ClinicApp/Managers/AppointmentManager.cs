@@ -43,7 +43,9 @@ public class AppointmentManager
         _patients = patients;
         _doctors = doctors;
     }
-
+    public event EventHandler<AppointmentEventArgs>? AppointmentCancelled;
+    public event EventHandler<AppointmentEventArgs>? AppointmentCompleted;
+    public event EventHandler<AppointmentEventArgs>? UrgentAppointmentBooked;
     public bool Book(
         int patientId,
         int doctorId,
@@ -118,6 +120,15 @@ public class AppointmentManager
             patientId, doctorId, scheduledAt, urgencyNote, durationMinutes);
 
         _appointments[_count++] = appointment;
+        var eventArgs = new AppointmentEventArgs(
+    appointment.Id,
+    appointment.PatientId,
+    appointment.DoctorId,
+    appointment.ScheduledAt,
+    appointment.Notes);
+
+        AppointmentBooked?.Invoke(this, eventArgs);
+        UrgentAppointmentBooked?.Invoke(this, eventArgs);
         AppointmentBooked?.Invoke(this, new AppointmentEventArgs(
     appointment.Id,
     appointment.PatientId,
@@ -175,6 +186,13 @@ public class AppointmentManager
 
         if (result)
         {
+            AppointmentCancelled?.Invoke(this, new AppointmentEventArgs(
+                appointment.Id,
+                appointment.PatientId,
+                appointment.DoctorId,
+                appointment.ScheduledAt,
+                appointment.Notes));
+
             Console.WriteLine($"Запис [{id}] скасовано.");
         }
         else
@@ -202,6 +220,13 @@ public class AppointmentManager
 
         if (result)
         {
+            AppointmentCompleted?.Invoke(this, new AppointmentEventArgs(
+                appointment.Id,
+                appointment.PatientId,
+                appointment.DoctorId,
+                appointment.ScheduledAt,
+                appointment.Notes));
+
             Console.WriteLine($"Запис [{id}] завершено.");
         }
         else
@@ -462,24 +487,36 @@ public class AppointmentManager
         return result;
     }
 
-    public static int CancelAll(
-        ICancellable[] items,
-        string reason = "")
+    public int CancelAll(
+     ICancellable[] items,
+     string reason = "")
     {
         int cancelledCount = 0;
 
-        for (int i = 0; i < items.Length; i++)
+        foreach (ICancellable item in items)
         {
-            if (items[i].Cancel(reason))
+            if (item.Cancel(reason))
             {
                 cancelledCount++;
+
+                if (item is Appointment appointment)
+                {
+                    AppointmentCancelled?.Invoke(
+                        this,
+                        new AppointmentEventArgs(
+                            appointment.Id,
+                            appointment.PatientId,
+                            appointment.DoctorId,
+                            appointment.ScheduledAt,
+                            appointment.Notes));
+                }
             }
         }
 
         return cancelledCount;
     }
 
-    private Appointment? FindById(int id)
+    public Appointment? FindById(int id)
     {
         for (int i = 0; i < _count; i++)
         {

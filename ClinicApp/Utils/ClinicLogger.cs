@@ -1,6 +1,7 @@
 ﻿
 using System.Text;
-
+using ClinicApp.Events;
+using ClinicApp.Managers;
 namespace ClinicApp.Utils;
 
 public class ClinicLogger
@@ -60,5 +61,39 @@ public class ClinicLogger
     public bool Exists()
     {
         return File.Exists(_logPath);
+    }
+    public void SubscribeEvents(Clinic clinic)
+    {
+        clinic.Appointments.AppointmentBooked += (sender, e) =>
+            LogInfo($"Створено запис #{e.AppointmentId}");
+
+        clinic.Appointments.AppointmentCancelled += (sender, e) =>
+            LogInfo($"Скасовано запис #{e.AppointmentId}");
+
+        clinic.Appointments.AppointmentCompleted += (sender, e) =>
+            LogInfo($"Завершено запис #{e.AppointmentId}");
+        clinic.TreatmentPlans.PlanCompleted += (sender, e) =>
+    LogInfo($"Завершено план лікування #{e.PlanId}");
+
+        clinic.Appointments.UrgentAppointmentBooked += (sender, e) =>
+        {
+            LogWarning($"Терміновий запис #{e.AppointmentId}");
+
+            string folder = "alerts";
+            Directory.CreateDirectory(folder);
+
+            string path = Path.Combine(
+                folder,
+                $"urgent_{DateTime.Now:yyyy-MM-dd}.txt");
+
+            File.AppendAllText(
+                path,
+                $"[{DateTime.Now:HH:mm:ss}] Терміновий запис #{e.AppointmentId}{Environment.NewLine}");
+        };
+
+        clinic.Patients.PatientAdded += (sender, e) =>
+            LogInfo($"Додано пацієнта #{e.PatientId}: {e.FullName}");
+        clinic.Billing.PaymentReceived += (sender, e) =>
+    LogInfo($"Отримано оплату {e.Amount:F2} грн за запис #{e.AppointmentId}");
     }
 }

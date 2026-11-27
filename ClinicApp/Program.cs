@@ -283,8 +283,7 @@ static void PatientMenu(Clinic clinic)
                     Patient patient = new Patient(firstName, lastName);
 
                     clinic.Patients.Add(patient);
-                    clinic.Logger.LogInfo(
-    $"Додано пацієнта #{patient.Id}: {patient.FullName}");
+                    
 
                     Console.WriteLine("Пацієнта успішно додано.");
                 }
@@ -629,8 +628,7 @@ static void AppointmentMenu(Clinic clinic)
                         scheduledAt,
                         duration);
 
-                    clinic.Logger.LogInfo(
-                        $"Створено запис: пацієнт #{patientId} → лікар #{doctorId}");
+                  
                 }
                 catch (ArgumentOutOfRangeException e)
                 {
@@ -721,7 +719,7 @@ static void AppointmentMenu(Clinic clinic)
                 clinic.Appointments.Cancel(
                     cancelId,
                     reason);
-                clinic.Logger.LogInfo($"Скасовано запис #{cancelId}: {reason}");
+                
                 break;
 
             case "7":
@@ -733,7 +731,7 @@ static void AppointmentMenu(Clinic clinic)
                 {
                     clinic.Appointments.Complete(
                         completeId);
-                    clinic.Logger.LogInfo($"Завершено запис #{completeId}");
+                    
                 }
 
                 break;
@@ -753,8 +751,7 @@ static void AppointmentMenu(Clinic clinic)
 
                 Console.Write("Причина скасування: ");
                 string cancelReason = Console.ReadLine() ?? "";
-
-                int cancelled = AppointmentManager.CancelAll(
+                int cancelled = clinic.Appointments.CancelAll(
                     cancellables, cancelReason);
 
                 Console.WriteLine($"Скасовано записів: {cancelled}");
