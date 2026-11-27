@@ -29,4 +29,15 @@ public class TreatmentPlanManager
 
         return true;
     }
+    public TreatmentPlan? GetById(int id)
+    {
+        return _plans.FirstOrDefault(p => p.Id == id);
+    }
+
+    public TreatmentPlan[] GetByPatient(int patientId)
+    {
+        return _plans
+            .Where(p => p.PatientId == patientId)
+            .ToArray();
+    }
 }
