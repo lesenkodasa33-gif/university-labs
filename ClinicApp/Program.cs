@@ -1,12 +1,15 @@
 ﻿using ClinicApp;
 using ClinicApp.Enums;
+using ClinicApp.Events;
+using ClinicApp.Interfaces;
 using ClinicApp.Managers;
 using ClinicApp.Models;
-using ClinicApp.Interfaces;
 using ClinicApp.Utils;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.InputEncoding = System.Text.Encoding.UTF8;
 Clinic clinic = new Clinic("Медична Клініка");
+clinic.Appointments.AppointmentBooked +=
+    OnAppointmentBookedConsole;
 
 // ==================== ПАЦІЄНТИ ====================
 
@@ -1266,5 +1269,14 @@ static void FileMenu(Clinic clinic)
                 break;
         }
     }
+}
+static void OnAppointmentBookedConsole(
+    object? sender,
+    AppointmentEventArgs e)
+{
+    Console.WriteLine(
+        $"[EVENT] Запис #{e.AppointmentId} створено: " +
+        $"пацієнт #{e.PatientId} → лікар #{e.DoctorId}, " +
+        $"{e.ScheduledAt:dd.MM.yyyy HH:mm}");
 }
 

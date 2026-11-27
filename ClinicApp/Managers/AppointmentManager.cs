@@ -1,6 +1,6 @@
 ﻿using ClinicApp.Interfaces;
 using ClinicApp.Models;
-
+using ClinicApp.Events;
 namespace ClinicApp.Managers;
 
 public class AppointmentManager
@@ -35,7 +35,7 @@ public class AppointmentManager
             return _appointments[index];
         }
     }
-
+    public event EventHandler<AppointmentEventArgs>? AppointmentBooked;
     public AppointmentManager(
         PatientManager patients,
         DoctorManager doctors)
@@ -84,6 +84,12 @@ public class AppointmentManager
 
         _appointments[_count] = appointment;
         _count++;
+        AppointmentBooked?.Invoke(this, new AppointmentEventArgs(
+    appointment.Id,
+    appointment.PatientId,
+    appointment.DoctorId,
+    appointment.ScheduledAt,
+    appointment.Notes));
 
         Console.WriteLine(
             $"Запис [{appointment.Id}] створено: " +
@@ -112,6 +118,12 @@ public class AppointmentManager
             patientId, doctorId, scheduledAt, urgencyNote, durationMinutes);
 
         _appointments[_count++] = appointment;
+        AppointmentBooked?.Invoke(this, new AppointmentEventArgs(
+    appointment.Id,
+    appointment.PatientId,
+    appointment.DoctorId,
+    appointment.ScheduledAt,
+    appointment.Notes));
 
         Console.WriteLine($"Терміновий запис [{appointment.Id}] створено.");
         return true;
@@ -137,6 +149,12 @@ public class AppointmentManager
             patientId, doctorId, scheduledAt, consultationTopic, durationMinutes);
 
         _appointments[_count++] = appointment;
+        AppointmentBooked?.Invoke(this, new AppointmentEventArgs(
+    appointment.Id,
+    appointment.PatientId,
+    appointment.DoctorId,
+    appointment.ScheduledAt,
+    appointment.Notes));
 
         Console.WriteLine($"Запис до спеціаліста [{appointment.Id}] створено.");
         return true;
