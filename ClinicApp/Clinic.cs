@@ -1,6 +1,7 @@
 ﻿using ClinicApp.Managers;
 using ClinicApp.Models;
 using ClinicApp.Utils;
+using ClinicApp.Events;
 namespace ClinicApp;
 
 public class Clinic
@@ -19,6 +20,7 @@ public class Clinic
     public ClinicExporter Exporter { get; }
     public SessionManager Session { get; }
     public PatientPassportWriter Passport { get; }
+    public SessionEventTracker Tracker { get; }
 
     public Clinic(string name)
     {
@@ -42,6 +44,15 @@ public class Clinic
         Patients.PatientAdded += Passport.OnPatientAdded;
         Appointments.AppointmentCompleted += Passport.OnAppointmentCompleted;
         TreatmentPlans.PlanCompleted += Passport.OnPlanCompleted;
+        Tracker = new SessionEventTracker();
+
+        Patients.PatientAdded += Tracker.OnPatientAdded;
+        Appointments.AppointmentBooked += Tracker.OnAppointmentBooked;
+        Appointments.UrgentAppointmentBooked += Tracker.OnUrgentBooked;
+        Appointments.AppointmentCancelled += Tracker.OnAppointmentCancelled;
+        Appointments.AppointmentCompleted += Tracker.OnAppointmentCompleted;
+        Billing.PaymentReceived += Tracker.OnPaymentReceived;
+        TreatmentPlans.PlanCompleted += Tracker.OnPlanCompleted;
     }
     public TreatmentPlanManager TreatmentPlans { get; }
     public void DisplaySchedule(DateTime date)
